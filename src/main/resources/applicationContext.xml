@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop.xsd
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!-- 启动扫描机制，并指定扫描对应的包 -->
+    <context:annotation-config />
+    <context:component-scan base-package="com.szk.vo.*" />
+    
+    <!-- dbcp数据库连接池 -->
+    <context:property-placeholder location="classpath:/jdbc.properties"/>
+    <bean id="dbcpDataSource" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${jdbc.driver}"/>
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+	
+	<!-- 集成Mybatis -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
+		<property name="dataSource" ref="dbcpDataSource"/>
+		<property name="configLocation" value="classpath:/mybatis.xml"/>
+	</bean>
+	
+	<!-- 事务管理 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dbcpDataSource"/>
+	</bean>
+	<!-- 使用注解定义事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<!-- 采用自动扫描的方式创建mapper bean -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.szk.mapper"/>
+		<property name="SqlSessionFactory" ref="sqlSessionFactory"/>
+		<property name="annotationClass" value="org.springframework.stereotype.Repository" />
+	</bean>
+	
+
+
+	
+</beans>
