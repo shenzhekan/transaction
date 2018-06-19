@@ -1,0 +1,5 @@
+create table t_role(
+    id	int primary key auto_increment,
+    role_name varchar(20),
+    note varchar(100)
+);

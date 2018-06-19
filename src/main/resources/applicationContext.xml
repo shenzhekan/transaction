@@ -15,21 +15,21 @@
 
     <!-- 启动扫描机制，并指定扫描对应的包 -->
     <context:annotation-config />
-    <context:component-scan base-package="com.szk.vo.*" />
+    <context:component-scan base-package="com.szk.*" />
     
     <!-- dbcp数据库连接池 -->
-    <context:property-placeholder location="classpath:/jdbc.properties"/>
+    <context:property-placeholder location="classpath:jdbc.properties"/>
     <bean id="dbcpDataSource" class="org.apache.commons.dbcp.BasicDataSource">
-        <property name="driverClassName" value="${jdbc.driver}"/>
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
-    </bean>
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/spring_jdbc" />
+		<property name="username" value="root"/>
+		<property name="password" value="root"/>
+	</bean>
 	
 	<!-- 集成Mybatis -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
 		<property name="dataSource" ref="dbcpDataSource"/>
-		<property name="configLocation" value="classpath:/mybatis.xml"/>
+		<property name="configLocation" value="classpath:mybatis.xml"/>
 	</bean>
 	
 	<!-- 事务管理 -->
